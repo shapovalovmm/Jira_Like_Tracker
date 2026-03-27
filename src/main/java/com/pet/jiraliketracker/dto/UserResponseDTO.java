@@ -1,5 +1,8 @@
 package com.pet.jiraliketracker.dto;
 
+import lombok.Data;
+
+@Data
 public class UserResponseDTO {
     public String email;
     public String username;

@@ -3,34 +3,31 @@ package com.pet.jiraliketracker.controller;
 import com.pet.jiraliketracker.dto.LoginRequestDTO;
 import com.pet.jiraliketracker.dto.RegisterRequestDTO;
 import com.pet.jiraliketracker.dto.UserResponseDTO;
-import com.pet.jiraliketracker.model.User;
-import com.pet.jiraliketracker.repository.UserRepository;
+import com.pet.jiraliketracker.service.AuthService;
+import com.pet.jiraliketracker.service.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TaskController {
+    UserService userService;
+    AuthService authService;
 
-    UserRepository userRepository;
-
-    public TaskController(@Qualifier("userRepository") UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public TaskController(@Qualifier("userService")  UserService userService,
+                          AuthService authService) {
+        this.userService = userService;
+        this.authService = authService;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register")
     public UserResponseDTO getRegister(@RequestBody RegisterRequestDTO request) {
-        userRepository.save(new User(request.username, request.email, request.password, "CLIENT"));
-        return new UserResponseDTO(request.email, request.username);
+        return authService.register(request);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public UserResponseDTO getLogin(@RequestBody LoginRequestDTO request) {
-        User user = userRepository.findByEmail(request.email).orElseThrow(() -> new RuntimeException("User not found"));
-        if(user.getPassword().equals(request.password)) {
-            return new UserResponseDTO(request.email, userRepository.findByEmail(request.email).get().getUsername());
-        } else return new UserResponseDTO("failed", "failed");
+        return authService.login(request);
     }
 }

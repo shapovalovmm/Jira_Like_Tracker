@@ -7,6 +7,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+
+// Звертається до репозиторію, щоб дістати юзера і перекласти його дані у формат, який сприймає Spring
+// Реалізує лише одну функцію - шукає користувача за унікальним полем
 @Service
 public class CustomerUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
@@ -21,7 +24,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
+                .withUsername(user.getEmail())  // Характеризує унікальне поле за яким шукається користувач
                 .password(user.getPassword())
                 .roles(user.getRole())
                 .build();

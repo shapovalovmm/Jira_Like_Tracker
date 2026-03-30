@@ -5,6 +5,7 @@ import com.pet.jiraliketracker.dto.RegisterRequestDTO;
 import com.pet.jiraliketracker.dto.UserResponseDTO;
 import com.pet.jiraliketracker.service.AuthService;
 import com.pet.jiraliketracker.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,12 +23,12 @@ public class TaskController {
     }
 
     @PostMapping("/auth/register")
-    public UserResponseDTO getRegister(@RequestBody RegisterRequestDTO request) {
+    public UserResponseDTO getRegister(@Valid @RequestBody RegisterRequestDTO request) {
         return authService.register(request);
     }
 
     @PostMapping("/auth/login")
-    public UserResponseDTO getLogin(@RequestBody LoginRequestDTO request) {
+    public UserResponseDTO getLogin(@Valid @RequestBody LoginRequestDTO request) {
         return authService.login(request);
     }
 }

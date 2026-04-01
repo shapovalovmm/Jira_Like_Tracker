@@ -59,11 +59,8 @@ public class AuthService {
         // Якщо паролі не збігаються, Spring викине тут виключення
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
         String token = jwtService.generateToken(userDetails);
-
         User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
-
         UserResponseDTO responseDto = new UserResponseDTO(user.getEmail(), user.getUsername(), token);
         return responseDto;
     }

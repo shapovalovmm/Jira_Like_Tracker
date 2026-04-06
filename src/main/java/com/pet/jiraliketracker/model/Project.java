@@ -28,6 +28,8 @@ public class Project {
 
     private String name;
 
+    @OneToMany(mappedBy = "project")
+    private List<Task> tasks;
     public Project() {}
 
     public Project(User owner, List<User> members, String name) {
@@ -36,3 +38,5 @@ public class Project {
         this.name = name;
     }
 }
+
+//todo Настроить валидацию

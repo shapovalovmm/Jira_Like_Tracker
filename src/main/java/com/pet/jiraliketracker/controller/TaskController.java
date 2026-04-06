@@ -5,6 +5,7 @@ import com.pet.jiraliketracker.model.Project;
 import com.pet.jiraliketracker.model.User;
 import com.pet.jiraliketracker.service.AuthService;
 import com.pet.jiraliketracker.service.ProjectService;
+import com.pet.jiraliketracker.service.TaskService;
 import com.pet.jiraliketracker.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,14 +16,18 @@ import java.util.List;
 @RestController
 public class TaskController {
     private final ProjectService projectService;
-    UserService userService;
-    AuthService authService;
+    private final UserService userService;
+    private final AuthService authService;
+    private final TaskService taskService;
 
-    public TaskController(@Qualifier("userService")  UserService userService,
-                          AuthService authService, ProjectService projectService) {
+    public TaskController(UserService userService,
+                          AuthService authService,
+                          ProjectService projectService,
+                          TaskService taskService) {
         this.userService = userService;
         this.authService = authService;
         this.projectService = projectService;
+        this.taskService = taskService;
     }
 
     @PostMapping("/auth/register")
@@ -50,5 +55,34 @@ public class TaskController {
         return projectService.createProject(request);
     }
 
-    // todo Один владелец - много проектов. Поиск проектов по названию, название - уникальный ключ.
+    @PostMapping("/createTask")
+    public TaskResponseDTO createTask(@RequestBody CreateTaskRequestDTO request) {
+        return taskService.createTask(request);
+    }
+
+    @PutMapping("/changeStatus")
+    public TaskResponseDTO changeStatus(@RequestBody ChangeStatusRequestDTO request) {
+        return taskService.changeStatus(request);
+    }
+
+    @PutMapping("/assign")
+    public TaskResponseDTO assign(@RequestBody AssignRequestDTO request) {
+        return taskService.assign(request);
+    }
+
+    @GetMapping("/getTasks")
+    public List<TaskResponseDTO> getTasks(@RequestParam Long id) {
+        return taskService.getTasks(id);
+    }
+
+    @PostMapping("/addComment")
+    public CommentResponseDTO addComment(@RequestBody AddCommentRequestDTO request) {
+        return taskService.addComment(request);
+    }
+
+    @GetMapping("/getTaskComments")
+    public List<CommentResponseDTO> getTaskComments(@RequestParam Long id) {
+        return taskService.getTaskComments(id);
+    }
 }
+

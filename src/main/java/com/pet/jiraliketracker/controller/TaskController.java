@@ -1,15 +1,18 @@
 package com.pet.jiraliketracker.controller;
 
 import com.pet.jiraliketracker.dto.*;
-import com.pet.jiraliketracker.model.Project;
-import com.pet.jiraliketracker.model.User;
+
+import com.pet.jiraliketracker.model.Status;
 import com.pet.jiraliketracker.service.AuthService;
 import com.pet.jiraliketracker.service.ProjectService;
 import com.pet.jiraliketracker.service.TaskService;
 import com.pet.jiraliketracker.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Qualifier;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -71,8 +74,18 @@ public class TaskController {
     }
 
     @GetMapping("/getTasks")
-    public List<TaskResponseDTO> getTasks(@RequestParam Long id) {
-        return taskService.getTasks(id);
+    public Page<TaskResponseDTO> getTasks(@RequestParam Long id, Pageable pageable) {
+        return taskService.getTasks(id, pageable);
+    }
+
+    @GetMapping("/getTasksByPriority")
+    public Page<TaskResponseDTO> getTasksByPriority(@RequestParam Long id, @RequestParam int priority, Pageable pageable) {
+        return taskService.getTasksByPriority(id, priority, pageable);
+    }
+
+    @GetMapping("/getTasksByStatus")
+    public Page<TaskResponseDTO> getTasksStatus(@RequestParam Long id, @RequestParam Status status, Pageable pageable) {
+        return taskService.getTasksByStatus(id, status, pageable);
     }
 
     @PostMapping("/addComment")

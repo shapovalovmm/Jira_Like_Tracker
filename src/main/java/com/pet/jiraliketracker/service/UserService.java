@@ -1,9 +1,7 @@
 package com.pet.jiraliketracker.service;
 
-import com.pet.jiraliketracker.dto.LoginRequestDTO;
 import com.pet.jiraliketracker.dto.ProjectResponseDTO;
-import com.pet.jiraliketracker.dto.RegisterRequestDTO;
-import com.pet.jiraliketracker.dto.UserResponseDTO;
+import com.pet.jiraliketracker.mapper.ProjectMapper;
 import com.pet.jiraliketracker.model.Project;
 import com.pet.jiraliketracker.model.User;
 import com.pet.jiraliketracker.repository.ProjectRepository;
@@ -11,7 +9,6 @@ import com.pet.jiraliketracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +35,7 @@ public class UserService {
         List<ProjectResponseDTO> list = new ArrayList<>();
 
         for(Project project : projects) {
-            list.add(new ProjectResponseDTO(project.getOwner().getEmail(), project.getMembers().stream()
-                    .map(User::getEmail)
-                    .toList(), project.getName()));
+            list.add(ProjectMapper.toDto(project));
         }
         return list;
     }

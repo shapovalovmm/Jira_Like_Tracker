@@ -4,8 +4,11 @@ import com.pet.jiraliketracker.dto.LoginRequestDTO;
 import com.pet.jiraliketracker.dto.RegisterRequestDTO;
 import com.pet.jiraliketracker.dto.UserResponseDTO;
 import com.pet.jiraliketracker.exception.DuplicateEmailException;
+import com.pet.jiraliketracker.mapper.UserMapper;
 import com.pet.jiraliketracker.model.User;
 import com.pet.jiraliketracker.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +23,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private static final Logger log = LoggerFactory.getLogger(TaskService.class);
 
     public AuthService(AuthenticationManager authenticationManager,
                        UserRepository userRepository,
@@ -45,7 +49,10 @@ public class AuthService {
                 .build();
 
         String token = jwtService.generateToken(userDetails);
-        return new UserResponseDTO(request.getEmail(), request.getUsername(), token);
+
+        log.debug("Authenticated user: {}", savedUser.getEmail());
+
+        return UserMapper.toDto(savedUser, token);
     }
 
     public UserResponseDTO login(LoginRequestDTO loginDto) {
@@ -61,7 +68,9 @@ public class AuthService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(userDetails);
         User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
-        UserResponseDTO responseDto = new UserResponseDTO(user.getEmail(), user.getUsername(), token);
-        return responseDto;
+
+        log.debug("Authenticated user: {}", user.getEmail());
+
+        return UserMapper.toDto(user, token);
     }
 }

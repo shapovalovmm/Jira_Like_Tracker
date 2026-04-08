@@ -18,13 +18,14 @@ import java.time.LocalDateTime;
 public class Task {
 
     public Task(String title, String description, User author,
-                User assignee, Project project, Status status) {
+                User assignee, Project project, Status status, int priority) {
         this.title = title;
         this.description=description;
         this.author = author;
         this.assignee = assignee;
         this.project = project;
         this.status = status;
+        this.priority = priority;
     }
 
     @Id
@@ -56,4 +57,6 @@ public class Task {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
+    private int priority;
 }

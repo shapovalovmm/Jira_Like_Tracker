@@ -37,4 +37,6 @@ public class GlobalExceptionHandler {
         // 400 Bad Request
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+
 }

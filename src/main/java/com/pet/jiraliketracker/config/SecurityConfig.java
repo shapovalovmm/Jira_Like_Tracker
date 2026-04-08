@@ -1,5 +1,6 @@
 package com.pet.jiraliketracker.config;
 
+import com.pet.jiraliketracker.security.CustomAccessDeniedHandler;
 import com.pet.jiraliketracker.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationProvider authenticationProvider) throws Exception {
@@ -44,7 +46,10 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(authenticationProvider)
                 // Додаємо наш фільтр до стандартного фільтра логіну по паролю
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);;
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .accessDeniedHandler(accessDeniedHandler)           // 403
+                );
         return http.build();
     }
 
